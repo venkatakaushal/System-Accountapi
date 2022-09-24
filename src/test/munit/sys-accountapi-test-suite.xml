@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="sys-accountapi-test-suite.xml" />
+	<munit:test name="sys-accountapi-test-suite-sys-accountapi-mainTest" doc:id="4d9b8c28-c467-4195-8ce1-c12ad009d0fb" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to sys-accountapi-main" doc:id="6f33ada2-d8b1-4191-8b1a-abab2765457e" name="sys-accountapi-main"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

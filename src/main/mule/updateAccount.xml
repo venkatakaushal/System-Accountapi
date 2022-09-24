@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="updateAccountFlow" doc:id="8362995e-4e68-4cc7-b0eb-5384f23e2108" >
+		<logger level="INFO" doc:name="Logger" doc:id="a92b24b1-6b3d-4325-b1f1-ed202865884d" />
+		<ee:transform doc:name="Transform Message" doc:id="ce9db730-8ce0-4e63-9eb4-60a77e248a22" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+    {
+    	"Id":payload.id,
+    	"Name": payload.name, 
+        "Gender__c": payload.gender default null,
+        "age__c": payload.age default null,
+        "Phone": payload.phone default null
+        
+    }
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:update type="Account" doc:name="Update" doc:id="d6e47434-2745-4518-8c26-306348ea0ce8" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="6bbfb66d-31fc-4c67-bea6-6539589edf2b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+if (payload.successful == true) 
+{
+   "code": 200,
+   "status": "success",
+   "message": "Account Updated with Id " ++ payload.items[0].id as String
+} else {
+	"code": 400,
+	"status": "failed",
+	"message": "Update Account Failed"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

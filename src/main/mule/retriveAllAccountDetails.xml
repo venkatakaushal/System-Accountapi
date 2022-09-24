@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="retriveAllAccountDetailsFlow" doc:id="1a65bc85-0e80-459e-9a9c-d361720eabe5" >
+		<logger level="INFO" doc:name="Log flow starts" doc:id="941db702-3f30-4a9e-a834-07e213c00fff" message="accountDetailsFlow Starts::"/>
+		<salesforce:query doc:name="Query-RetriveAccountDetails" doc:id="bcbae65c-ccd4-4dcd-bb20-7f4599f46455" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[${sf.detailsQuery}
+]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Salesforce Paylod to JSON" doc:id="8dcb0155-9202-4593-8cfd-c843dd59f352" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map {
+        "billingCountry": $.BillingCountry,
+        "billingStreet": $.BillingStreet,
+        "billingCity": $.BillingCity,
+        "age": $.age__c,
+        "phone": $.Phone,
+        "billingPostalCode": $.BillingPostalCode,
+        "gender": $.Gender__c,
+        "Id": $.Id,
+        "name": $.Name
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Final Reponse" doc:id="3cdc2732-f018-4f33-ac3e-5f48af0d8dc9" message="Salesforce reponse after transformation-------- #[payload]"/>
+	</flow>
+</mule>

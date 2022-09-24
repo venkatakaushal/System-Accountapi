@@ -1,0 +1,6 @@
+sf:
+ userName: "kaushal@mule.com"
+ password: "Babba@jan96"
+ token: "n674eMGLf4o7Ww0O0HxoHpQH"
+ detailsQuery: "select Id,Name,BillingStreet,BillingCity,BillingCountry,BillingPostalCode,Phone,Type,age__c,Gender__c from account"
+ detailsByGenderQuery: "select Id,Name,BillingStreet,BillingCity,BillingCountry,BillingPostalCode,Phone,Type,age__c,Gender__c from account where Gender__c=':gender'"

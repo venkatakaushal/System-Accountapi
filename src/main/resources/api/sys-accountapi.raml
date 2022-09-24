@@ -1,0 +1,84 @@
+#%RAML 1.0
+title: accountapi
+
+types:
+  Account: !include datatypes/Account.raml
+  ClientError: !include datatypes/ClientError.raml
+  ServerError: !include datatypes/ServerError.raml
+  SuccessResponse: !include datatypes/Success.raml
+
+/account:
+  get:
+   responses:
+     200:
+       body:
+         application/json:
+            type: Account[]
+     400:
+          body:
+            application/json:
+             type: ClientError
+     500:
+          body:
+            application/json:
+             type: ServerError
+  post:
+    body:
+      application/json:
+        type: Account
+    responses:
+      201:
+        body:
+          application/json:
+            type: SuccessResponse
+      400:
+          body:
+            application/json:
+             type: ClientError
+      500:
+          body:
+            application/json:
+             type: ServerError       
+  put:
+    body:
+      application/json:
+        example:
+          type: Account
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+                  {
+                    "code": 200,
+                    "status": "success",
+                    "message": "Account Updated with Id A123456789 "
+                  }     
+      400:
+        body:
+          application/json:
+            type: ClientError
+      500:
+          body:
+            application/json:
+             type: ServerError      
+                        
+/accountDetails:
+  get:
+    queryParameters:
+     gender:
+      type: string
+      example: Male
+    responses:
+      200:
+        body:
+          application/json:
+             type: Account
+      400:
+        body:
+          application/json:
+            type: ClientError
+      500:
+          body:
+            application/json:
+             type: ServerError              

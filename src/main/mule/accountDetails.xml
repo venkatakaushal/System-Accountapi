@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="accountDetailsFlow" doc:id="2a859cdf-ea8b-43a7-b4b2-8cfcbade2f64" >
+		<logger level="INFO" doc:name="Logger" doc:id="d43e1ef7-1e75-4207-a01b-a5351210d5c8" message="accountDetailsFlow starts---------"/>
+		<salesforce:query doc:name="Query" doc:id="9a526c7a-7f9f-483a-b1c5-60b15aac3b96" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[${sf.detailsByGenderQuery}
+]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	gender : attributes.queryParams.gender
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message" doc:id="7296cfba-26aa-442f-8119-606316dd6e28" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map {
+        "billingCountry": $.BillingCountry,
+        "billingStreet": $.BillingStreet,
+        "billingCity": $.BillingCity,
+        "age": $.age__c,
+        "phone": $.Phone,
+        "billingPostalCode": $.BillingPostalCode,
+        "gender": $.Gender__c,
+        "Id": $.Id,
+        "name": $.Name
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

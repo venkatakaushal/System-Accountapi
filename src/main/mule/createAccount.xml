@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="createAccountFlow" doc:id="c3692134-ec0e-46d0-99ff-4bc84f8a9485" >
+		<logger level="INFO" doc:name="Log flow starts" doc:id="4816a556-5d3f-4ed4-b263-138dc8fe45be" message="createAccountFlow starts:"/>
+		<ee:transform doc:name="Transform Message" doc:id="5c193f16-4b76-43cb-94cb-e1f7b80b8571" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+    {
+    	"Name": payload.name, 
+        "Gender__c": payload.gender default "",
+        "age__c": payload.age default "",
+        "Phone":payload.phone default ""
+        
+    }
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create type="Account" doc:name="Create" doc:id="b5ab1ba5-7c59-4b16-9dc7-6e719078ec7c" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="25c7e950-ed9c-4e5e-833b-20f35b5e9393">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+
+if (payload.successful == true)
+  {
+   "code": 201,
+   "status": "success",
+   "message": "Account Created with Id " ++ payload.items[0].id as String
+  }  else {
+  	"code": 400,
+     status: "failed",
+    "message": "Account creation failed"
+  }   ]]></ee:set-payload>
+			</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[201]]></ee:set-variable>
+					</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="c28b2504-d858-4216-ad69-eae1d122fc74" message="final reponse create account: #[payload]"/>
+	</flow>
+</mule>
